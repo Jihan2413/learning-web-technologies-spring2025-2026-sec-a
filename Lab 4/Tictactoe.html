@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tic Tac Toe</title>
+
+<style>
+
+body{
+    text-align:center;
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+.scoreboard{
+    margin:15px;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.board{
+    display:grid;
+    grid-template-columns:repeat(3,100px);
+    width:300px;
+    margin:20px auto;
+}
+
+.cell{
+    width:100px;
+    height:100px;
+    border:2px solid black;
+    font-size:40px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+
+    /* Gradient color */
+    background:linear-gradient(135deg,#74ebd5,#9face6);
+}
+
+.cell:hover{
+    background:linear-gradient(135deg,#ffecd2,#fcb69f);
+}
+
+/* Animation */
+.animate{
+    animation:pop 0.2s ease;
+}
+
+@keyframes pop{
+    0%{
+        transform:scale(0.5);
+        opacity:0.5;
+    }
+    100%{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+button{
+    padding:10px 20px;
+    font-size:16px;
+    margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Tic Tac Toe</h1>
+
+<div class="scoreboard">
+X Score: <span id="xScore">0</span> |
+O Score: <span id="oScore">0</span>
+</div>
+
+<h2 id="status">Player X Turn</h2>
+
+<div class="board">
+
+<div class="cell" onclick="play(this,0)"></div>
+<div class="cell" onclick="play(this,1)"></div>
+<div class="cell" onclick="play(this,2)"></div>
+
+<div class="cell" onclick="play(this,3)"></div>
+<div class="cell" onclick="play(this,4)"></div>
+<div class="cell" onclick="play(this,5)"></div>
+
+<div class="cell" onclick="play(this,6)"></div>
+<div class="cell" onclick="play(this,7)"></div>
+<div class="cell" onclick="play(this,8)"></div>
+
+</div>
+
+<button onclick="resetGame()">Reset Game</button>
+
+<script>
+
+let board = ["","","","","","","","",""];
+let player = "X";
+let gameOver = false;
+
+let xScore = 0;
+let oScore = 0;
+
+let win = [
+[0,1,2],
+[3,4,5],
+[6,7,8],
+[0,3,6],
+[1,4,7],
+[2,5,8],
+[0,4,8],
+[2,4,6]
+];
+
+function play(cell,index){
+
+    if(board[index] != "" || gameOver){
+        return;
+    }
+
+    cell.innerHTML = player;
+    board[index] = player;
+
+    cell.classList.add("animate");
+
+    checkWinner();
+
+    if(!gameOver){
+        player = player == "X" ? "O" : "X";
+        document.getElementById("status").innerHTML =
+        "Player " + player + " Turn";
+    }
+
+}
+
+function checkWinner(){
+
+    for(let i=0;i<win.length;i++){
+
+        let a = win[i][0];
+        let b = win[i][1];
+        let c = win[i][2];
+
+        if(board[a] != "" &&
+           board[a] == board[b] &&
+           board[a] == board[c]){
+
+            document.getElementById("status").innerHTML =
+            "Player " + player + " Wins!";
+
+            gameOver = true;
+
+            if(player == "X"){
+                xScore++;
+                document.getElementById("xScore").innerHTML = xScore;
+            }
+            else{
+                oScore++;
+                document.getElementById("oScore").innerHTML = oScore;
+            }
+
+            return;
+        }
+    }
+
+    if(!board.includes("")){
+        document.getElementById("status").innerHTML = "Draw!";
+        gameOver = true;
+    }
+
+}
+
+function resetGame(){
+
+    board = ["","","","","","","","",""];
+    player = "X";
+    gameOver = false;
+
+    document.getElementById("status").innerHTML =
+    "Player X Turn";
+
+    let cells = document.querySelectorAll(".cell");
+
+    cells.forEach(function(cell){
+        cell.innerHTML = "";
+        cell.classList.remove("animate");
+    });
+
+}
+
+</script>
+
+</body>
+</html>
